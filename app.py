@@ -1,8 +1,6 @@
-from flask import Flask, render_template, request, redirect, url_for, flash
-import json
+from flask import Flask, render_template, request
 
 app = Flask(__name__)
-app.secret_key = 'your_secret_key'
 
 # 问卷问题
 survey_questions = [
@@ -16,18 +14,8 @@ survey_questions = [
 @app.route('/', methods=['GET', 'POST'])
 def survey():
     if request.method == 'POST':
-        answers = {}
-        for question in survey_questions:
-            answer = request.form.get(str(question['id']))
-            answers[question['id']] = answer
         return render_template('thank_you.html')
     return render_template('survey.html', questions=survey_questions)
 
-# Vercel 需要这个
-def app_handler(event, context):
-    return app.wsgi_app
-
-app.debug = False
-
-if __name__ == '__main__':
-    app.run() 
+def handler(event, context):
+    return app 
