@@ -3,7 +3,7 @@ import json
 import os
 
 app = Flask(__name__)
-app.secret_key = 'your_secret_key'  # 用于flash消息
+app.secret_key = 'your_secret_key'
 
 # 问卷问题
 survey_questions = [
@@ -19,7 +19,6 @@ def survey():
     if request.method == 'POST':
         try:
             answers = {}
-            # 检查所有问题是否都已回答
             all_answered = True
             for question in survey_questions:
                 answer = request.form.get(str(question['id']))
@@ -29,23 +28,17 @@ def survey():
                 answers[question['id']] = answer
             
             if not all_answered:
-                flash('请回答所有问题后再提交！')
-                return redirect(url_for('survey'))
+                return Response('请回答所有问题后再提交！', status=400)
             
-            # 在 Vercel 环境中，我们暂时只打印答案而不保存
             print("收到的答案:", answers)
             return render_template('thank_you.html')
         except Exception as e:
-            print(f"Error: {str(e)}")  # 添加错误日志
-            flash('提交失败，请重试！')
-            return redirect(url_for('survey'))
+            print(f"Error: {str(e)}")
+            return Response('提交失败，请重试！', status=500)
     
     return render_template('survey.html', questions=survey_questions)
 
 # Vercel 需要这个
-app.debug = False
-
-# 添加这个处理函数
 def handler(event, context):
     return app
 
