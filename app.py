@@ -1,6 +1,5 @@
 from flask import Flask, render_template, request, redirect, url_for, flash
 import json
-import os
 
 app = Flask(__name__)
 app.secret_key = 'your_secret_key'
@@ -17,30 +16,18 @@ survey_questions = [
 @app.route('/', methods=['GET', 'POST'])
 def survey():
     if request.method == 'POST':
-        try:
-            answers = {}
-            all_answered = True
-            for question in survey_questions:
-                answer = request.form.get(str(question['id']))
-                if not answer:
-                    all_answered = False
-                    break
-                answers[question['id']] = answer
-            
-            if not all_answered:
-                return Response('请回答所有问题后再提交！', status=400)
-            
-            print("收到的答案:", answers)
-            return render_template('thank_you.html')
-        except Exception as e:
-            print(f"Error: {str(e)}")
-            return Response('提交失败，请重试！', status=500)
-    
+        answers = {}
+        for question in survey_questions:
+            answer = request.form.get(str(question['id']))
+            answers[question['id']] = answer
+        return render_template('thank_you.html')
     return render_template('survey.html', questions=survey_questions)
 
 # Vercel 需要这个
-def handler(event, context):
-    return app
+def app_handler(event, context):
+    return app.wsgi_app
+
+app.debug = False
 
 if __name__ == '__main__':
     app.run() 
