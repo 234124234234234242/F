@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>关于曾涛的调查问卷</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .question {
+            margin-bottom: 20px;
+        }
+        .error {
+            color: red;
+            margin-bottom: 10px;
+        }
+        input[type="text"], input[type="number"] {
+            width: 100%;
+            padding: 8px;
+            margin-top: 5px;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+    <h1>关于曾涛的调查问卷</h1>
+    
+    {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            {% for message in messages %}
+                <div class="error">{{ message }}</div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+
+    <form method="POST">
+        {% for question in questions %}
+        <div class="question">
+            <label>{{ question.question }}</label><br>
+            {% if question.type == 'text' %}
+                <input type="text" name="{{ question.id }}" required>
+            {% elif question.type == 'number' %}
+                <input type="number" name="{{ question.id }}" required>
+            {% elif question.type == 'radio' %}
+                {% for option in question.options %}
+                    <input type="radio" name="{{ question.id }}" value="{{ option }}" required>
+                    <label>{{ option }}</label>
+                {% endfor %}
+            {% endif %}
+        </div>
+        {% endfor %}
+        <button type="submit">提交问卷</button>
+    </form>
+</body>
+</html> 
