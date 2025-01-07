@@ -17,5 +17,5 @@ def survey():
         return render_template('thank_you.html')
     return render_template('survey.html', questions=survey_questions)
 
-def handler(event, context):
-    return app 
+# Vercel 需要这个
+app = app.wsgi_app 

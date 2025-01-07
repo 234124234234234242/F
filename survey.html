@@ -14,10 +14,6 @@
         .question {
             margin-bottom: 20px;
         }
-        .error {
-            color: red;
-            margin-bottom: 10px;
-        }
         input[type="text"], input[type="number"] {
             width: 100%;
             padding: 8px;
@@ -31,22 +27,10 @@
             border-radius: 4px;
             cursor: pointer;
         }
-        button:hover {
-            background-color: #45a049;
-        }
     </style>
 </head>
 <body>
     <h1>关于曾涛的调查问卷</h1>
-    
-    {% with messages = get_flashed_messages() %}
-        {% if messages %}
-            {% for message in messages %}
-                <div class="error">{{ message }}</div>
-            {% endfor %}
-        {% endif %}
-    {% endwith %}
-
     <form method="POST">
         {% for question in questions %}
         <div class="question">
